@@ -1,5 +1,20 @@
 function analyse_measurement_series()
+% Analyses the measurement series (laser power, pinhole, ...) localization
+% data and outputs an Excel file containing a table of information about
+% the results for the various conditions. Can be used to create Supl.
+% Figures.
 %
+%
+%
+% This file is part of the supplementary software for
+% "DNA Paint Minflux nanoscopy"  by Lynn M. Ostersehlt, Daniel C. Jans, Anna Wittek,
+% Jan Keller-Findeisen, Steffen J. Sahl, Stefan W. Hell, and Stefan Jakobs
+
+fprintf('Analyse measurement series\n');
+
+if ~exist('get_root_folder.m', 'file')
+    initialize();
+end
 
 % determine file locations
 root_folder = get_root_folder();
@@ -40,8 +55,8 @@ for i = 1 : numel(folder_names)
         
         % sigma computation
         T = 5;
-        sigmas = minflux.std_xyz(minflux.std_xyz(:, 4) >= T, 1:3); % all events with at least T localizations
-        sigmas = [sigmas, sqrt(sum(sigmas(:, 1:2).^2, 2)/2)]; % adds sigma_r        
+        sigmas = minflux.combined.std_xyz(minflux.combined.n >= T, :); % all events with at least T localizations
+        sigmas = [sigmas, sqrt(sum(sigmas(:, 1:2).^2, 2)/2)]; % adds sigma_r
         
         % save properties to structure
         fields = fieldnames(minflux.meta);
@@ -55,10 +70,10 @@ for i = 1 : numel(folder_names)
         info(j).MedianLocTime = median(minflux.t_loc);
         info(j).MedianSigmaX = median(sigmas(:, 1));
         info(j).MedianSigmaY = median(sigmas(:, 2));
-        info(j).MedianSigmaZ = median(sigmas(:, 3));        
-        info(j).MedianSigmaR = median(sigmas(:, 4));        
+        info(j).MedianSigmaZ = median(sigmas(:, 3));
+        info(j).MedianSigmaR = median(sigmas(:, 4));
         info(j).FRCcombined = minflux.frc_combined.resolution;
-        info(j).MeanLocPerEvent = mean(minflux.cpos(:, 4));
+        info(j).MeanLocPerEvent = mean(minflux.combined.n);
         info(j).TimeFilter = Tmax;
     end
     

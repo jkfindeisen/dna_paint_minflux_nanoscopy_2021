@@ -115,7 +115,7 @@ decorate('time elapsed within events t_{loc} (s)', 'occurence', sprintf('median 
 
 %% plot sigma x, y, z, r
 T = 5;
-sigmas = minflux.std_xyz(minflux.std_xyz(:, 4) >= T, 1:3); % all events with at least T localizations
+sigmas = minflux.combined.std_xyz(minflux.combined.n >= T, :); % all events with at least T localizations
 sigmas = [sigmas, sqrt(sum(sigmas(:, 1:2).^2, 2)/2)]; % adds sigma_r
 med = median(sigmas, 1);
 

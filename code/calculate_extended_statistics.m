@@ -47,27 +47,23 @@ end
 % will work on minflux.dpos from now one
 
 %% combine localization of each event, compute std deviation in x,y,z
-uid = unique(minflux.id);
-N = numel(uid);
-
-minflux.std_xyz = zeros(N, 4);
-minflux.cpos = zeros(N, 4);
-minflux.ct = zeros(N, 1);
-for i = 1 : N
-    ix = minflux.id == uid(i);
-    minflux.std_xyz(i, :) = [std(minflux.dpos(ix, :), [], 1), sum(ix)];
-    minflux.cpos(i, :) = [mean(minflux.dpos(ix, :), 1), sum(ix)];
-    minflux.ct(i) = mean(minflux.t(ix));
+[~, ~, uid] = unique(minflux.id);
+c.n = accumarray(uid, 1);
+N = numel(c.n);
+c.t = accumarray(uid, minflux.t) ./ c.n;
+c.pos = zeros(N, 3);
+c.std_xyz = zeros(N, 3);
+for i = 1 : 3
+    c.pos(:, i) = accumarray(uid, minflux.dpos(:, i)) ./ c.n;
+    c.std_xyz(:, i) = accumarray(uid, minflux.dpos(:, i), [], @std);
 end
+minflux.combined = c;
 
 %% start and end times of each binding event (first and last time)
-minflux.t_event = zeros(N, 2);
-for i = 1 : N
-    ti = minflux.t(minflux.id == uid(i));
-    minflux.t_event(i, :) = [min(ti), max(ti)];
-end
-minflux.t_scan = minflux.t_event(2:end, 1) - minflux.t_event(1:end-1, 2); % start of next - end of previous
-minflux.t_loc = minflux.t_event(:, 2) - minflux.t_event(:, 1); % end - start
+minflux.t_start = accumarray(uid, minflux.t, [], @min);
+minflux.t_end = accumarray(uid, minflux.t, [], @max);
+minflux.t_scan = minflux.t_start(2:end, 1) - minflux.t_end(1:end-1); % start of next - end of previous
+minflux.t_loc = minflux.t_end - minflux.t_start; % end - start
 
 %% fourier ring correlation (only in x,y)
 
@@ -77,7 +73,7 @@ y = minflux.dpos(:, 2);
 ix = rand(size(x)) < 0.5;
 
 % 2D render of x,y (histogram, 1nm pixel size)
-sxy = 0.5;
+sxy = 1;
 h1 = render_xy(x(ix), y(ix), sxy, sxy, Rx, Ry);
 h2 = render_xy(x(~ix), y(~ix), sxy, sxy, Rx, Ry);
 
@@ -87,8 +83,8 @@ minflux.frc.qi = qi;
 minflux.frc.ci = ci;
 
 % now on combined
-x = minflux.cpos(:, 1);
-y = minflux.cpos(:, 2);
+x = minflux.combined.pos(:, 1);
+y = minflux.combined.pos(:, 2);
 ix = rand(size(x)) < 0.5;
 h1 = render_xy(x(ix), y(ix), sxy, sxy, Rx, Ry);
 h2 = render_xy(x(~ix), y(~ix), sxy, sxy, Rx, Ry);
@@ -97,5 +93,5 @@ h2 = render_xy(x(~ix), y(~ix), sxy, sxy, Rx, Ry);
 minflux.frc_combined.resolution = estimated_resolution / 1e-9; % in nm
 minflux.frc_combined.qi = qi;
 minflux.frc_combined.ci = ci;
-    
+  
 end

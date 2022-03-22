@@ -7,7 +7,7 @@ function [estimated_resolution, fc, qi, ci] = img_fourier_ring_correlation(image
 assert(nargin >= 3, 'Not enough arguments!');
 
 if nargin < 4 || isempty(frc_smoothing_kernel)
-    frc_smoothing_kernel = fspecial('gaussian', [21, 21], 1);
+    frc_smoothing_kernel = fspecial('gaussian', [31, 31], 1);
 end
 
 % fourier transform
@@ -27,14 +27,13 @@ fc = a_sm ./ sqrt(b_sm .* c_sm);
 fc = real(fc);
 
 % calculate frequency space grid
-% TODO must be adapted to physical stack size (this is for m)!!
-B = 1e6; % bin size (in pixel in fourier space) 
 [qx, qy] = img_fourier_grid(size(image1));
 qx = qx / physical_image_size(1);
 qy = qy / physical_image_size(2);
 q = sqrt(qx.^2 + qy.^2);
 
 % bin a,b,c in dependence of q
+B = 5e5; % bin size (in pixel in fourier space) % TODO must be adapted to physical stack size (this is for m)!!
 qi = round(q / B);
 idx = qi(:) + 1;
 qi = (0 : max(qi(:))).' * B;

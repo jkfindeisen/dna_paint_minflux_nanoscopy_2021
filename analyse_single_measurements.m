@@ -1,7 +1,20 @@
 function analyse_single_measurements()
+% Analyses the measurement series (laser power, pinhole, ...) localization
+% data and outputs an Excel file containing a table of information about
+% the results for the various conditions. Can be used to create Supl.
+% Figures.
 %
+%
+%
+% This file is part of the supplementary software for
+% "DNA Paint Minflux nanoscopy"  by Lynn M. Ostersehlt, Daniel C. Jans, Anna Wittek,
+% Jan Keller-Findeisen, Steffen J. Sahl, Stefan W. Hell, and Stefan Jakobs
 
-close all;
+fprintf('Analyse all single measurements\n');
+
+if ~exist('get_root_folder.m', 'file')
+    initialize();
+end
 
 % determine file locations
 root_folder = get_root_folder();
