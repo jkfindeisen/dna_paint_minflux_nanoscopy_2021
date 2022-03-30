@@ -1,16 +1,16 @@
 function analyse_measurement_series()
-% Analyses the measurement series (laser power, pinhole, ...) localization
+% Analyses the Minflux performance measurement series
+% (varying laser power, pinhole, ...). Uses localization
 % data and outputs an Excel file containing a table of information about
-% the results for the various conditions. Can be used to create Supl.
-% Figures.
+% the results for the various conditions.
 %
+% Recreates Figures of Suppl. Note III (not exactly).
 %
-%
-% This file is part of the supplementary software for
-% "DNA Paint Minflux nanoscopy"  by Lynn M. Ostersehlt, Daniel C. Jans, Anna Wittek,
+% This file is part of the supplementary software for "DNA-PAINT MINFLUX
+% nanoscopy", 2021 by Lynn M. Ostersehlt, Daniel C. Jans, Anna Wittek,
 % Jan Keller-Findeisen, Steffen J. Sahl, Stefan W. Hell, and Stefan Jakobs
 
-fprintf('Analyse measurement series\n');
+fprintf('analyse Minflux performance measurement series\n');
 
 if ~exist('get_root_folder.m', 'file')
     initialize();
@@ -19,7 +19,7 @@ end
 % determine file locations
 root_folder = get_root_folder();
 data_folder = [root_folder, filesep, 'data'];
-output_folder = [root_folder, filesep, 'results', filesep, 'aggregate'];
+output_folder = [root_folder, filesep, 'results', filesep, 'performance'];
 if ~exist(output_folder, 'dir')
     mkdir(output_folder);
 end
@@ -31,7 +31,7 @@ Nmax = 100; % consider only that many molecules for estiamating of scan/loc time
 folder_names = {'concentration', 'laserpower', 'pinhole'};
 for i = 1 : numel(folder_names)
     folder_name = folder_names{i};
-    fprintf('work on condition %s\n', folder_name);
+    fprintf('work on condition: %s\n', folder_name);
     folder = [data_folder, filesep, folder_name];
     
     files = dir([folder, filesep, '*.mat']);
@@ -77,7 +77,7 @@ for i = 1 : numel(folder_names)
         info(j).TimeFilter = Tmax;
     end
     
-    % Save analysis results in combinded table file
+    % save analysis results in combined table Excel file
     info = struct2table(info);
     disp(info)
     

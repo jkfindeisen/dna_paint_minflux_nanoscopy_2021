@@ -1,16 +1,14 @@
 function analyse_single_measurements()
-% Analyses the measurement series (laser power, pinhole, ...) localization
-% data and outputs an Excel file containing a table of information about
-% the results for the various conditions. Can be used to create Supl.
-% Figures.
+% Analyses all contained single measurements (data for main text figures
+% and data for measurement series for supplementary figures) and outputs a
+% standardized analysis (localization precision, crude visualization) for
+% every dataset.
 %
-%
-%
-% This file is part of the supplementary software for
-% "DNA Paint Minflux nanoscopy"  by Lynn M. Ostersehlt, Daniel C. Jans, Anna Wittek,
+% This file is part of the supplementary software for "DNA-PAINT MINFLUX
+% nanoscopy", 2021 by Lynn M. Ostersehlt, Daniel C. Jans, Anna Wittek,
 % Jan Keller-Findeisen, Steffen J. Sahl, Stefan W. Hell, and Stefan Jakobs
 
-fprintf('Analyse all single measurements\n');
+fprintf('analyse all single measurements\n');
 
 if ~exist('get_root_folder.m', 'file')
     initialize();
@@ -19,7 +17,7 @@ end
 % determine file locations
 root_folder = get_root_folder();
 data_folder = [root_folder, filesep, 'data'];
-output_folder = [root_folder, filesep, 'results', filesep, 'single'];
+output_folder = [root_folder, filesep, 'results', filesep, 'single-dataset'];
 if ~exist(output_folder, 'dir')
     mkdir(output_folder);
 end
@@ -28,8 +26,8 @@ end
 folders = dir(data_folder);
 for i = 1 : numel(folders)
     folder = folders(i);
-    if ~folder.isdir || strcmp(folder.name, '.') || strcmp(folder.name, '..')
-        continue;
+    if ~folder.isdir || strcmp(folder.name, '.') || strcmp(folder.name, '..') || strcmp(folder.name, 'psf')
+        continue; % need to ignore the PSF folder
     end
     
     folder_name = folder.name;
