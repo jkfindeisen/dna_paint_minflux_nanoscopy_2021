@@ -12,7 +12,7 @@ Stefan W. Hell (1,3,4), and Stefan Jakobs (1,2,4,5)
   Automated Microscopy, Göttingen, Germany 
 
 
-1. System requirements and licenses
+## 1. System requirements and licenses
 
 This is the software package containing raw localization data and analysis scripts in Matlab
 (https://www.mathworks.com/products/matlab.html). It has been tested with Matlab R2020b.
@@ -23,12 +23,12 @@ The data is provided for academic and visualization purposes only. Commercial us
 nanoscopy data (reproduction outside of the publication, etc. ) is forbidden. Please contact the authors for further inquiries.
 
 
-2. Installation guide
+## 2. Installation guide
 
 No specific installation is necessary. Execute "initialize.m" at least once before running other scripts to include all paths.
 
 
-3. Demonstration and usage instructions
+## 3. Demonstration and usage instructions
 
 Make sure to run initialize.m at least once. 
 
@@ -49,8 +49,7 @@ Call "create_supplemental_figures_cfr_simulations.m"
   Recreates the CFR simulation/estimation from Suppl. Note figure III
 
 
-
-4. Data description
+##4. Data description
 
 Files *.mat in folder data (subfolder 2D for 2D data and 3D for 3D data). The data files are Matlab "mat" files (based on and compatible with HDF5)
 and contain the following fields
