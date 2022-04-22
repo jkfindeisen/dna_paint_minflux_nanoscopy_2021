@@ -16,7 +16,7 @@ end
 
 % determine file locations
 root_folder = get_root_folder();
-data_file = [root_folder, filesep, 'data', filesep, '2D', filesep, '04_U2OS_Vim-rsEGFP2_het1_NB_A655_2nM_PH0.85_LP14_16.03.2021_Minflux.mat'];
+data_file = [root_folder, filesep, 'data', filesep, '2D', filesep, 'Fig1f_U2OS_Vimentin-rsEGFP2_Minflux.mat'];
 figure_folder = [root_folder, filesep, 'results', filesep, 'frc'];
 
 % load Minflux file
