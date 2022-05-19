@@ -127,17 +127,25 @@ for i = 1 : 4
     hold on
     plot(med(i)*[1,1],ylim(),'LineWidth',lw,'Color',cm)
     xlim(g([1,end]));
-    decorate('\sigma_x (nm)', 'occurence', sprintf('median \\sigma_%s = %.1f nm ', labels{i}, med(i)));
+    decorate('\sigma_x (nm)', 'occurence', sprintf('median \\sigma_%s = %.2f nm ', labels{i}, med(i)));
 end
 
 %% FRC
+frc = minflux.frc;
+qi = frc.qi{1};
+ci = mean(cat(2, frc.ci{:}), 2);
+resolution = mean(frc.resolution);
 subplot(3,4,9);
-plot(minflux.frc.qi, minflux.frc.ci);
-decorate('k', 'FRC', sprintf('est. res. %.1f nm', minflux.frc.resolution));
+plot(qi, ci);
+decorate('k', 'FRC', sprintf('est. res. %.2f nm', resolution));
 
+frc = minflux.frc_combined;
+qi = frc.qi{1};
+ci = mean(cat(2, frc.ci{:}), 2);
+resolution = mean(frc.resolution);
 subplot(3,4,10);
-plot(minflux.frc_combined.qi, minflux.frc_combined.ci);
-decorate('k', 'FRC of combined', sprintf('est. res. %.1f nm', minflux.frc_combined.resolution));
+plot(qi, ci);
+decorate('k', 'FRC of combined', sprintf('est. res. %.2f nm (<n>=%.2f)', resolution, mean(minflux.combined.n)));
 
 figs = [figs; fig];
 
@@ -150,6 +158,15 @@ for i = 2 : size(d, 2)
 end
 decorate('time (s)', 'Est. drift (nm)');
 
+%% std error of combined localizations
+y = minflux.combined.ste_rz;
+subplot(3,4,12);
+g = 0:0.5:15; % limit of x-range for histogram of sigma_r
+histogram(y(:, 1),g,'FaceColor', cf, 'EdgeColor',ce);
+hold on
+plot(median(y(:,1))*[1,1],ylim(),'LineWidth',lw,'Color',cm)
+xlim(g([1,end]));
+decorate('\sigma_x (nm)', 'occurence', sprintf('median \\sigma_r = %.2f nm, \\sigma_z = %.2f nm ', median(y, 1)));
 end
 
 function decorate(labelx, labely, plot_title)

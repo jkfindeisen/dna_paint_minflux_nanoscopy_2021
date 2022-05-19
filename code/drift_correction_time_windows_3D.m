@@ -21,7 +21,7 @@ Ns = floor(diff(Rt) / T); % total number of time windows
 assert(Ns > 1, 'Need at least two time windows, reduce T');
 
 % parameters
-CR = 10; % center of mass
+CR = 8; % center of mass
 D = Ns; % how many frames maximally in the cross-correlation
 w = linspace(1, 0.2, D).'; % weight with distance
 % w = ones(D, 1);
